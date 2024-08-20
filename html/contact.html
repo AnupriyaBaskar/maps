@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chennai Air View</title>
+    <link rel="stylesheet" href="/css/style.css">    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+    .dropdown-container {
+      position: absolute; /* Position dropdowns absolutely within the map */
+      top: 10px; /* Adjust the top position as needed */
+      left: 10px; /* Adjust the left position as needed */
+      z-index: 1000; /* Ensure dropdowns appear above the map */
+      bottom: 10px;
+    }
+    .dropdown-container .dropdown {
+      margin-right: 10px; /* Add some space between dropdowns */
+      margin-bottom: 180px;
+      margin-top: 80px;
+    }
+
+    .dropdown-menu{
+        border-radius: 0px;
+        padding: 20px;
+        width: 180px;
+        height: 170px;
+    }
+    .dpdmenu{
+        padding: 10px 40px;
+        border-radius: 0;
+    }
+
+        .container-dpd {
+        display: block;
+        position: relative;
+        margin-top: 15px;
+        margin-left: 12px;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        }
+
+        /* Hide the browser's default checkbox */
+        .container-dpd input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        }
+
+        /* Create a custom checkbox */
+        .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 18px;
+        width: 18px;
+        background-color: #eee;
+        }
+
+        /* On mouse-over, add a grey background color */
+        .container-dpd:hover input ~ .checkmark {
+        background-color: #ccc;
+        }
+
+        /* When the checkbox is checked, add a blue background */
+        .container-dpd input:checked ~ .checkmark {
+        background-color: #2196F3;
+        }
+
+        /* Create the checkmark/indicator (hidden when not checked) */
+        .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        }
+
+        /* Show the checkmark when checked */
+        .container-dpd input:checked ~ .checkmark:after {
+        display: block;
+        }
+
+        /* Style the checkmark/indicator */
+        .container-dpd .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+        }
+
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <h3>Chennai Air View</h3>
+        </div>
+        <ul id="menuList">
+            <li><a href="index.html">Current</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="">Contact</a></li>
+            <li><a href="form.html">View Data</a></li>
+        </ul>
+        <div class="menu-icon">
+            <i class="fa-solid fa-bars" onclick="toggleMenu()"></i>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 0px;">
+        <div id="map">
+            <div class="dropdown-container">
+                <!-- Dropdown 1 -->
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle dpdmenu" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Monitor Loops
+                  </button>
+                    <ul class="dropdown-menu">
+                      <label class="container-dpd">Ozone
+                        <input type="checkbox" checked="checked">
+                        <span class="checkmark"></span>
+                      </label>
+                      
+                      <label class="container-dpd">PM 2.5
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                      </label>
+                      
+                      <label class="container-dpd">PM 10
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                      </label>
+                      
+                     
+                    </ul>
+                </div>
+                <!-- Dropdown 2 -->
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle dpdmenu" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Countours Loops
+                  </button>
+                    <ul class="dropdown-menu">
+                        <label class="container-dpd">Ozone
+                            <input type="checkbox" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                      
+                      <label class="container-dpd">PM 2.5
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                      </label>
+                      
+                      <label class="container-dpd">PM 10
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                      </label>
+                      
+                    </ul>
+                </div>
+                
+              </div>
+        </div>
+
+        
+    </div>
+
+
+    <!------------------------MODAL 1---------------------------------->
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal-title"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    ...
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+
+
+    <!------------------------MODAL 1---------------------------------->
+
+    <script>
+        let menuList = document.getElementById("menuList")
+        menuList.style.maxHeight = "0px";
+
+        function toggleMenu(){
+            if(menuList.style.maxHeight == "0px")
+            {
+                menuList.style.maxHeight = "300px";
+            }
+            else{
+                menuList.style.maxHeight = "0px";
+            }
+        }
+        
+    </script>
+    <script src="https://kit.fontawesome.com/f8e1a90484.js" crossorigin="anonymous"></script>
+
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        const locations = [
+            { lat: 13.1278, lng: 80.2642, Station_Name: "Kodungaiyur, Chennai", Address: "Address: No 23, Srinivasan Street, Krishnamurthy Nagar, Kodungaiyur, Near to MKB Nagar East Ave",title: "Chennai Air View Air Quality Management" },
+
+            { lat: 13.0052189, lng: 80.2398125, Station_Name: "Name: Velachery Res. Area, Chennai", Address: "Sardar Patel Road, Opposite to C.L.R.I, Beside The Adyar Cancer Institute, Adyar, Chennai, Tamil Nadu 600036",info: 'Location 2: Velachery Res. Area, Chennai', url: 'http://example.com/location2',title: "Chennai Air View Air Quality Management" },
+
+            { lat: 12.9533, lng: 80.2357, Station_Name: "Perungudi, Chennai", info: 'Location 3: Perungudi, Chennai', url: 'http://example.com/location3',title: "Chennai Air View Air Quality Management",Address: "Door No 1/465, 6th cross Street, Sree Sai Nagar, Thuraipakkam, Near to small toll plaza" },
+
+            { lat: 12.9099161, lng: 80.1076538,Station_Name: "Alandur Bus Depot, Chennai", info: 'Location 4: Alandur Bus Depot, Chennai', url: 'http://example.com/location4',title: "Chennai Air View Air Quality Management", Address: "MKN Rd, St Thomas Mount, Chennai, Tamil Nadu 600016" },
+
+            { lat: 13.1036, lng: 80.2909, info: 'Location 5: Royapuram, Chennai', url: 'http://example.com/location5',title: "Chennai Air View Air Quality Management",Station_Name: "Arumbakkam, Chennai", Address: "4 and 5, Murugesan Street, Balavinayagar Nagar, Arumbakkam, chennai -600106 opposite side of vijay park hotel - 100 Feet Road"},
+
+
+            { lat: 13.0664, lng: 80.2112, info: 'Location 6: Arumbakkam, Chennai', url: 'http://example.com/location6',title: "Chennai Air View Air Quality Management",Station_Name: "Royapuram, Chennai", Address: "M/s Thirumalai Chemicals Ltd. Near to Royapuram Bridge" },
+
+
+            { lat: 13.164544, lng: 80.26285, info: 'Location 7: Manali, Chennai', url: 'http://example.com/location7',title: "Chennai Air View Air Quality Management",Station_Name: "Manali, Chennai",  },
+
+
+            { lat: 13.218341, lng: 80.32027, Station_Name: "Gandhi Nagar_Ennore, Chennai",  info: 'Location 8: Gandhi Nagar_Ennore, Chennai', url: 'http://example.com/location8',title: "Chennai Air View Air Quality Management", Address: "1st floor, Government Primary Health Care Centre Kathivakkam, Gandhi Nagar, Ennore Chennai." }
+        ];
+    
+        // Initialize the map centered on Chennai
+        const map = L.map('map').setView([13.0827, 79.90], 11); // Center on Chennai with a zoom level of 10
+    
+        // Add Carto tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.carto.com/">CARTO</a>',
+        }).addTo(map);
+    
+        // Add markers to the map
+        locations.forEach(location => {
+            const marker = L.marker([location.lat, location.lng]).addTo(map);
+            marker.bindPopup(location.info);
+    
+            // Add click event listener to open the modal
+            marker.on('click', () => {
+                // Set modal content
+                document.getElementById('modal-title').innerText = location.title;
+                document.getElementById('modal-body').innerHTML = `<p>Station Name: ${location.Station_Name} <br> Address: ${location.Address} <br> Latitude : ${location.lat} <br> Longitude : ${location.lng} <br><a href="/html/form.html" target="_blank">Click here for previous year Data</a>`;
+    
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+                modal.show();
+            });
+        });
+    
+        // Add geocoder control to the map
+        const geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false
+        }).on('markgeocode', function(e) {
+            const bbox = e.geocode.bbox;
+            const poly = L.polygon([
+                bbox.getSouthEast(),
+                bbox.getNorthEast(),
+                bbox.getNorthWest(),
+                bbox.getSouthWest()
+            ]).addTo(map);
+            map.fitBounds(poly.getBounds());
+        }).addTo(map);
+    </script>
+    
+</body>
+</html>
